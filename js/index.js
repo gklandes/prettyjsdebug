@@ -32,20 +32,20 @@ function debugDirective ($filter) {
 function debugFilter () {
     var depth = 0;
     var indentStr = '  ';
+    var maxDepth = 3;
 
-    return function (val) {
+    return function (val, max) {
+        if (max && parseInt(max)) maxDepth = max;
         return getStringVal(val);
-    }
+    };
     
     function getStringVal (val) {
         var str = '';
         var indent = '';
         
-        for(i=0;i<depth;i++) { indent += indentStr }
+        for(var i=0; i<depth; i++) { indent += indentStr; }
         str += indent;
-        
-        console.log(depth, val);
-        
+
         // SIMPLE VALUES
         if (val === undefined) str += 'Undefined';
         else if (val === null) str += 'Null';
@@ -54,22 +54,33 @@ function debugFilter () {
         else if (val.constructor === Boolean) str += val;
         // FUNCTIONS
         else if (val.constructor === Function) {
-            str += val.toString().replace(/\n(\s*)/g,'\n'+indent+'$1');
+            var match = val.toString().match(/function (\w+)/);
+            str += (match) ? 
+                '<< Function "' + match[1] + '" >>' :
+                '<< Anon Function >>'; //val.toString().replace(/\n(\s*)/g,'\n'+indent+'$1');
         }
         // ITERABLES
         else if (typeof val == 'object') {
+            if (depth >= maxDepth) {
+                str += indent + indentStr + '<< ';
+                str += val.constructor === Array ?
+                    'Array (' + val.length + ')' :
+                    'Object';
+                str += ' >>';
+                return str;
+            }
+
             var isArray = val.constructor === Array;
             str += (isArray) ? '[\n' : '{\n';
             depth++;
-            if (isArray) {        
-                for(j=0;j<val.length;j++) {
+            if (isArray) {
+                for(var j=0;j<val.length;j++) {
                     str += getStringVal(val[j]) +',\n';
                 }
             } else {
                 for (var key in val) {
                     if (val.hasOwnProperty(key)) {
-                        console.log(key, val[key]);
-                        valStr = getStringVal(val[key]);
+                        var valStr = getStringVal(val[key]);
                         valStr = valStr.replace(/^\s+/,'');
                         str += indent + indentStr + key + ': ' + valStr +',\n';
                     }
@@ -80,9 +91,7 @@ function debugFilter () {
             str += (isArray) ? ']' : '}';
         }
         else {
-            if (val) console.log(val, val.constructor, typeof val);
-            else console.log('--');
-            str = 'foo';
+            str = val.toString();
         }
         return str;
     }
