@@ -42,21 +42,21 @@
                 var match = val.toString().match(/function (\w+)/);
                 str += (match) ? 
                     '<< Function "' + match[1] + '" >>' :
-                    '<< Anon Function >>'; //val.toString().replace(/\n(\s*)/g,'\n'+indent+'$1');
+                    '<< Anon Function >>';
             }
             // ITERABLES
             else if (typeof val == 'object') {
+                var isArray = val.constructor === Array;
                 if (depth >= maxDepth) {
                     str += indent + indentStr + '<< ';
-                    str += val.constructor === Array ?
+                    str += isArray ?
                         'Array (' + val.length + ')' :
                         'Object';
                     str += ' >>';
                     return str;
                 }
 
-                var isArray = val.constructor === Array;
-                str += (isArray) ? '[\n' : '{\n';
+                str += isArray ? '[\n' : '{\n';
                 depth++;
                 if (isArray) {
                     for(var j=0;j<val.length;j++) {
