@@ -10,17 +10,24 @@
     function debugDirective () {
         return {
             restrict: 'E',
-            template: '<pre>{{ var | debug }}</pre>',
+            template: templateFn,
             scope: {var: '='}
         };
+        function templateFn (tElement, tAttrs) {
+            var depth = tAttrs.depth || false;
+            return '<pre>{{ var | debug : ' + depth +' }}</pre>';
+        }
     }
     function debugFilter () {
-        var depth = 0;
+        var depth, maxDepth;
         var indentStr = '  ';
-        var maxDepth = 3;
+        var depthDefault = 3;
 
         return function (val, max) {
-            if (max && parseInt(max)) maxDepth = max;
+            depth = 0;
+            maxDepth = (max && parseInt(max)) ?
+                max :
+                depthDefault;
             return getStringVal(val);
         };
         
