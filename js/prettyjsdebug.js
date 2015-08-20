@@ -48,7 +48,7 @@
             else if (typeof val == 'object') {
                 var isArray = val.constructor === Array;
                 if (depth >= maxDepth) {
-                    str += indent + indentStr + '<< ';
+                    str += '<< ';
                     str += isArray ?
                         'Array (' + val.length + ')' :
                         'Object';
