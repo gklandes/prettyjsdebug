@@ -15,6 +15,8 @@
             Undef: undefined,
             NotNum: NaN,
             Fxn: myFn,
+            Date: new Date(),
+            RegExp: /[a-z]/,
             Complex: ['one',2,['a','b'],{foo: 'bar'},myFn],
             Array: [1,2,'three'],
             Object: {foo: 'bar', fizz: 'baz'},

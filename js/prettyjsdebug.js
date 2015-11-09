@@ -42,8 +42,8 @@
             if (val === undefined) str += 'Undefined';
             else if (val === null) str += 'Null';
             else if (val.constructor === String) str += '"' + val + '"';
-            else if (val.constructor === Number) str += val;
-            else if (val.constructor === Boolean) str += val;
+            else if (val.constructor === Number || val.constructor === Boolean) str += val;
+            else if (val.constructor === Date || val.constructor === RegExp) str += val.toString();
             // FUNCTIONS
             else if (val.constructor === Function) {
                 var match = val.toString().match(/function (\w+)/);
