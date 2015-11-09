@@ -15,8 +15,8 @@
         <h1>Pretty Debug Output</h1>
         <p ng-repeat-start="(key, val) in vm.tests">{{ key }}</p>
 
+        <pre>{{ val }}</pre>
         <debug var="val"></debug>
-        <pre>{{val | debug }}</pre>
 
         <hr ng-repeat-end>
     </div></div>
